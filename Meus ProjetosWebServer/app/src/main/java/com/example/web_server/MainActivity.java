@@ -1,5 +1,6 @@
 package com.example.web_server;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import java.io.IOException;
@@ -23,10 +24,14 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btnStart) Button btnStart;
     @BindView(R.id.btnStop) Button btnStop;
 
+    private EditText editText;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        //editText = (EditText) findViewById(R.id.edtEnviar);
 
         try {
             server = new MyHTTPD();
@@ -51,12 +56,28 @@ public class MainActivity extends AppCompatActivity {
                 txtIpAddress.setText("");
             }
         });
-
-        //EditText leitura;
-        //leitura = (EditText)findViewById(R.id.enviar);
-        //leitura.getText().
     }
 
+    public void onClickBtnEnviar(View view){
+        //String escreve = editText.getText().toString();
+
+        //Intent IntentEscreveWeb = new Intent(getApplicationContext(),MyHTTPD.class);
+        //Bundle transfere = new Bundle();
+        //transfere.putString("escreve",escreve);
+        //IntentEscreveWeb.putExtras(transfere);
+
+        Testing testing = new Testing();
+
+        EditText mPassword;
+        EditText mUsername;
+
+        mPassword   = (EditText)findViewById(R.id.edtPassword);
+        mUsername   = (EditText)findViewById(R.id.edtUsername);
+
+        testing.setPassword(mPassword.getText().toString());
+        testing.setUsername(mUsername.getText().toString());
+        //Log.v("EditText", mUsername.getText().toString());
+    }
 
     private void initIPAddress() {
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
