@@ -1,28 +1,28 @@
 package com.example.web_server;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import java.io.IOException;
-import fi.iki.elonen.NanoHTTPD;
-import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
-
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
+    ImageView image;
     private static MyHTTPD server;
     @BindView(R.id.txtIpAddress) TextView txtIpAddress;
     @BindView(R.id.btnStart) Button btnStart;
-    @BindView(R.id.btnStop) Button btnStop;
+    @BindView(R.id.btnStop) Button btnStop;                             //instancia os objetos do xml para o java
 
     private EditText editText;
 
@@ -31,19 +31,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        //editText = (EditText) findViewById(R.id.edtEnviar);
-
-        try {
+        image = (ImageView) findViewById(R.id.logo);                    //instanciando imagem no app
+        image.setImageResource(R.drawable.logo_iot);                    //desenhando imagem na tela
+        try {                                                           //verificando se o servidor funciona
             server = new MyHTTPD();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         btnStart.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                try {
-                    server.start();
-                    initIPAddress();
+            @Override public void onClick(View view) {                         //botão para iniciar o servidor
+                try {                                                  //verificando se o servidor funciona
+                    server.start();                                    //inicia o servidor
+                    initIPAddress();                                   //gera o IP
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -51,33 +51,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnStop.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-                server.stop();
-                txtIpAddress.setText("");
+            @Override public void onClick(View view) {                          //botão para finalixzar servidor
+                server.stop();                                         //Finaliza servidor
+                txtIpAddress.setText("");                              //limpa textview do IP
             }
         });
     }
 
-    public void onClickBtnEnviar(View view){
-        //String escreve = editText.getText().toString();
+    public void onClickBtnEnviar(View view){                           //envia os dados dos editText
+        Testing testing = new Testing();                               //instancia para os dados dos editText migrarem pars activity
 
-        //Intent IntentEscreveWeb = new Intent(getApplicationContext(),MyHTTPD.class);
-        //Bundle transfere = new Bundle();
-        //transfere.putString("escreve",escreve);
-        //IntentEscreveWeb.putExtras(transfere);
-
-        Testing testing = new Testing();
-
-        EditText mPassword;
+        EditText mPassword;                                            //declarando variaveis
         EditText mUsername;
 
-        mPassword   = (EditText)findViewById(R.id.edtPassword);
+        mPassword   = (EditText)findViewById(R.id.edtPassword);        //recebendo dados do editText
         mUsername   = (EditText)findViewById(R.id.edtUsername);
 
-        testing.setPassword(mPassword.getText().toString());
+        testing.setPassword(mPassword.getText().toString());           //enviando os dados para a classe de transição entre as activity
         testing.setUsername(mUsername.getText().toString());
-        //Log.v("EditText", mUsername.getText().toString());
+        mUsername.getText().clear();                                   //limpando editText
+        mPassword.getText().clear();
+        Toast.makeText(getApplicationContext(), "Sucesso", Toast.LENGTH_SHORT).show();  //exibe mensagem para orientar o usuario
+
     }
+
 
     private void initIPAddress() {
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
